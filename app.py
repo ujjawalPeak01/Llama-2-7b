@@ -30,18 +30,18 @@ class InferlessPythonModel:
         temperature=0.8,
         top_p=0.95,
         top_k=5):
-        print("Starting Time -->", datetime.now().strftime("%H:%M:%S"))
+        print("Starting Time -->", datetime.now().strftime("%H:%M:%S"), flush=True)
         prompt = self.get_prompt(message, chat_history, system_prompt)
-        print("Prompt Finished -->", datetime.now().strftime("%H:%M:%S"))
+        print("Prompt Finished -->", datetime.now().strftime("%H:%M:%S"), flush=True)
         inputs = self.tokenizer([prompt], return_tensors='pt').to('cuda')
-        print("Tokenizer Finished -->", datetime.now().strftime("%H:%M:%S"))
+        print("Tokenizer Finished -->", datetime.now().strftime("%H:%M:%S"), flush=True)
 
         streamer = TextIteratorStreamer(self.tokenizer,
                                         timeout=10.,
                                         skip_prompt=True,
                                         skip_special_tokens=True)
         
-        print("Streamer Finished -->", datetime.now().strftime("%H:%M:%S"))
+        print("Streamer Finished -->", datetime.now().strftime("%H:%M:%S"), flush=True)
         generate_kwargs = dict(
             inputs,
             streamer=streamer,
@@ -54,13 +54,13 @@ class InferlessPythonModel:
         )
         t = Thread(target=self.model.generate, kwargs=generate_kwargs)
         t.start()
-        print("Thread Started -->", datetime.now().strftime("%H:%M:%S"))
+        print("Thread Started -->", datetime.now().strftime("%H:%M:%S"), flush=True)
 
         outputs = ''
         for text in streamer:
             outputs += text
 
-        print("Outputs Finished -->", datetime.now().strftime("%H:%M:%S"))
+        print("Outputs Finished -->", datetime.now().strftime("%H:%M:%S"), flush=True)
 
         return outputs
 
