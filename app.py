@@ -1,5 +1,6 @@
 from threading import Thread
 from typing import Iterator
+from datetime import datetime
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
@@ -29,13 +30,18 @@ class InferlessPythonModel:
         temperature=0.8,
         top_p=0.95,
         top_k=5):
+        print("Starting Time -->", datetime.now().strftime("%H:%M:%S"))
         prompt = self.get_prompt(message, chat_history, system_prompt)
+        print("Prompt Finished -->", datetime.now().strftime("%H:%M:%S"))
         inputs = self.tokenizer([prompt], return_tensors='pt').to('cuda')
+        print("Tokenizer Finished -->", datetime.now().strftime("%H:%M:%S"))
 
         streamer = TextIteratorStreamer(self.tokenizer,
                                         timeout=10.,
                                         skip_prompt=True,
                                         skip_special_tokens=True)
+        
+        print("Streamer Finished -->", datetime.now().strftime("%H:%M:%S"))
         generate_kwargs = dict(
             inputs,
             streamer=streamer,
@@ -48,10 +54,13 @@ class InferlessPythonModel:
         )
         t = Thread(target=self.model.generate, kwargs=generate_kwargs)
         t.start()
+        print("Thread Started -->", datetime.now().strftime("%H:%M:%S"))
 
         outputs = ''
         for text in streamer:
             outputs += text
+
+        print("Outputs Finished -->", datetime.now().strftime("%H:%M:%S"))
 
         return outputs
 
