@@ -42,9 +42,9 @@ The following is a sample Input and Output JSON for this model which you can use
   "inputs": [
     {
       "data": [
-        "How to count all the stars in the night sky?"
+        "There is a fine house in the forest"
       ],
-      "name": "message",
+      "name": "prompt",
       "shape": [
         1
       ],
@@ -59,14 +59,14 @@ The following is a sample Input and Output JSON for this model which you can use
 {
   "outputs": [
     {
-      "data": [
-        "Result"
-      ],
       "name": "generated_text",
+      "datatype": "BYTES",
       "shape": [
         1
       ],
-      "datatype": "BYTES"
+      "data": [
+        "Blank"
+      ]
     }
   ]
 }
